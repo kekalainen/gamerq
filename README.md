@@ -3,6 +3,7 @@ A PHP library for querying various game servers and sending RCON commands to the
 
 # Supported games
 This library should support all games that implement the [Source query](https://developer.valvesoftware.com/wiki/Server_queries) protocol, [Source RCON protocol](https://developer.valvesoftware.com/wiki/Source_RCON_Protocol), [GameSpy v4 / UT3 query protocol](https://wiki.unrealadmin.org/UT3_query_protocol) or [webrcon](https://github.com/Facepunch/webrcon). Not all protocol features are implemented. Below is an incomplete table of supported games.
+
 | Game | RCON | Query |
 | ---- | :--: | :---: |
 | [Garry's Mod](https://gmod.facepunch.com) | ✅ | ✅ |
