@@ -34,7 +34,10 @@ class SourceQuery {
     }
 
     public function read($length = 1400) {
-        return fread($this->socket, $length);
+        $binaryString = fread($this->socket, $length);
+        if ($binaryString == null)
+            throw new \Exception('Empty read');
+        return $binaryString;
     }
 
     /**
