@@ -1,0 +1,95 @@
+<?php
+namespace Kekalainen\GameRQ;
+
+class SourceQuery {
+    protected $socket;
+
+    // Headers
+    const A2S_INFO = 0x54;
+
+    // Extra data flags
+    const EDF_PORT = 0x80;
+    const EDF_STEAMID = 0x10;
+    const EDF_SOURCETV = 0x40;
+    const EDF_KEYWORDS = 0x20;
+    const EDF_GAMEID = 0x01;
+
+    public function connect($address, $port, $timeout = 1) {
+        $socket = @fsockopen("udp://".$address, $port, $errno, $errstr, $timeout);
+        if ($socket) {
+            stream_set_timeout($socket, $timeout);
+            $this->socket = $socket;
+        } else {
+            throw new \Exception($errstr);
+        }
+    }
+
+    public function disconnect() {
+        @fclose($this->socket);
+    }
+
+    public function write($header, $body) {
+        $binaryString = pack('CCCCCa*', 0xFF, 0xFF, 0xFF, 0xFF, $header, "$body\x00"); // 5 bytes / unsigned chars, null-terminated string
+        return fwrite($this->socket, $binaryString, strlen($binaryString));
+    }
+
+    public function read($length = 1400) {
+        return fread($this->socket, $length);
+    }
+
+    /**
+     * Retrieves information about the server including, but not limited to: its name, the map currently being played, and the number of players
+     * 
+     * https://developer.valvesoftware.com/wiki/Server_queries#A2S_INFO
+     */
+    public function info() {
+        $this->write(self::A2S_INFO, 'Source Engine Query');
+        $buffer = new Buffer(substr($this->read(), 4));
+
+        $info = [];
+
+        $info['header'] = $buffer->getByte();
+        $info['protocol'] = $buffer->getByte();
+
+        $info['name'] = $buffer->getString();
+        $info['map'] = $buffer->getString();
+        $info['folder'] = $buffer->getString();
+        $info['game'] = $buffer->getString();
+        
+        $info['id'] = $buffer->getShort();
+        $info['players'] = $buffer->getByte();
+        $info['maxplayers'] = $buffer->getByte();
+        $info['bots'] = $buffer->getByte();
+        $info['type'] = $buffer->getByte();
+        $info['environment'] = $buffer->getByte();
+        $info['visibility'] = $buffer->getByte();
+        $info['vac'] = $buffer->getByte();
+        $info['version'] = $buffer->getString();
+        $info['edf'] = $buffer->getByte();
+        
+        $edf = $info['edf'];
+        
+        if ($edf & self::EDF_PORT) {
+            $info['port'] = $buffer->getShort();
+        }
+
+        if ($edf & self::EDF_STEAMID) {
+            $info['steamid'] = $buffer->getLongLong();
+        }
+
+        if ($edf & self::EDF_SOURCETV) {
+            $info['sourcetv_port'] = $buffer->getShort();
+            $info['sourcetv_name'] = $buffer->getString();
+        }
+
+        if ($edf & self::EDF_KEYWORDS) {
+            $info['keywords'] = explode(',', $buffer->getString());
+        }
+
+        if ($edf & self::EDF_GAMEID) {
+            $info['gameid'] = $buffer->getLongLong();
+        }
+
+        return $info;
+    }
+}

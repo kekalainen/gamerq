@@ -1,0 +1,64 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "c768d6ddc6fa9837e2b4ab43c130ff77",
+    "packages": [
+        {
+            "name": "arthurkushman/php-wss",
+            "version": "1.6.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/arthurkushman/php-wss.git",
+                "reference": "6e027588d4a23bb9e55acc9d2ea61389df3b3af2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/arthurkushman/php-wss/zipball/6e027588d4a23bb9e55acc9d2ea61389df3b3af2",
+                "reference": "6e027588d4a23bb9e55acc9d2ea61389df3b3af2",
+                "shasum": ""
+            },
+            "require": {
+                "ext-pcntl": "*",
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "monolog/monolog": "^1.24",
+                "phpunit/phpunit": "^7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "WSSC\\": "src",
+                    "WSSCTEST\\": "tests"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Web-socket server with URI parse and multi-process support",
+            "homepage": "https://github.com/arthurkushman/php-wss",
+            "keywords": [
+                "php",
+                "processes",
+                "routes",
+                "web socket",
+                "web socket client",
+                "web socket server",
+                "web-sockets"
+            ],
+            "time": "2020-03-10T09:52:30+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}

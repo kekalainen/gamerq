@@ -1,0 +1,20 @@
+{
+    "name": "kekalainen/gamerq",
+    "description": "RCON & query library for various game servers",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kekalainen",
+            "email": "git@kekalainen.me"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Kekalainen\\GameRQ\\": "src/"
+        }
+    },
+    "require": {
+        "arthurkushman/php-wss": "^1.6"
+    }
+}
