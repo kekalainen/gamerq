@@ -84,6 +84,16 @@ class SourceQuery {
 
         if ($edf & self::EDF_KEYWORDS) {
             $info['keywords'] = explode(',', $buffer->getString());
+
+            if ($info['game'] === 'Rust') {
+                foreach($info['keywords'] as $keyword) {
+                    if (substr($keyword, 0, 2) == 'mp') {
+                        $info['maxplayers'] = intval(substr($keyword, 2));
+                    } else if (substr($keyword, 0, 2) == 'cp') {
+                        $info['players'] = intval(substr($keyword, 2));
+                    }
+                }
+            }
         }
 
         if ($edf & self::EDF_GAMEID) {
