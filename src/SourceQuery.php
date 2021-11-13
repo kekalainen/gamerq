@@ -6,6 +6,8 @@ class SourceQuery {
 
     // Headers
     const A2S_INFO = 0x54;
+    const S2A_INFO_SRC = 0x49;
+    const S2C_CHALLENGE = 0x41;
 
     // Extra data flags
     const EDF_PORT = 0x80;
@@ -52,6 +54,20 @@ class SourceQuery {
         $info = [];
 
         $info['header'] = $buffer->getByte();
+
+        if ($info['header'] !== self::S2A_INFO_SRC)
+        {
+            if ($info['header'] === self::S2C_CHALLENGE) {
+                $challenge = pack('l', $buffer->getLong());
+                $this->write(self::A2S_INFO, 'Source Engine Query' . "\x00" . $challenge);
+                $buffer = new Buffer(substr($this->read(), 4));
+                $info['header'] = $buffer->getByte();
+            }
+
+            if ($info['header'] !== self::S2A_INFO_SRC)
+                throw new \Exception('Unrecognized response header');
+        }
+
         $info['protocol'] = $buffer->getByte();
 
         $info['name'] = $buffer->getString();
