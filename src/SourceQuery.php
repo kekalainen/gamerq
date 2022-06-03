@@ -1,7 +1,9 @@
 <?php
+
 namespace Kekalainen\GameRQ;
 
-class SourceQuery {
+class SourceQuery
+{
     protected $socket;
 
     // Headers
@@ -16,8 +18,9 @@ class SourceQuery {
     const EDF_KEYWORDS = 0x20;
     const EDF_GAMEID = 0x01;
 
-    public function connect($address, $port, $timeout = 1) {
-        $socket = @fsockopen("udp://".$address, $port, $errno, $errstr, $timeout);
+    public function connect($address, $port, $timeout = 1)
+    {
+        $socket = @fsockopen("udp://" . $address, $port, $errno, $errstr, $timeout);
         if ($socket) {
             stream_set_timeout($socket, $timeout);
             $this->socket = $socket;
@@ -26,17 +29,20 @@ class SourceQuery {
         }
     }
 
-    public function disconnect() {
+    public function disconnect()
+    {
         @fclose($this->socket);
     }
 
-    public function write($header, $body, $challenge = null) {
+    public function write($header, $body, $challenge = null)
+    {
         $binaryString = pack('CCCCCa*', 0xFF, 0xFF, 0xFF, 0xFF, $header, "$body\x00"); // 5 bytes / unsigned chars, null-terminated string
         if ($challenge) $binaryString .= $challenge;
         return fwrite($this->socket, $binaryString, strlen($binaryString));
     }
 
-    public function read($length = 1400) {
+    public function read($length = 1400)
+    {
         $binaryString = fread($this->socket, $length);
         if ($binaryString == null)
             throw new \Exception('Empty read');
@@ -48,7 +54,8 @@ class SourceQuery {
      * 
      * https://developer.valvesoftware.com/wiki/Server_queries#A2S_INFO
      */
-    public function info() {
+    public function info()
+    {
         $this->write(self::A2S_INFO, 'Source Engine Query');
         $buffer = new Buffer(substr($this->read(), 4));
 
@@ -56,8 +63,7 @@ class SourceQuery {
 
         $info['header'] = $buffer->getByte();
 
-        if ($info['header'] !== self::S2A_INFO_SRC)
-        {
+        if ($info['header'] !== self::S2A_INFO_SRC) {
             if ($info['header'] === self::S2C_CHALLENGE) {
                 $challenge = pack('l', $buffer->getLong());
                 $this->write(self::A2S_INFO, 'Source Engine Query', $challenge);
@@ -75,7 +81,7 @@ class SourceQuery {
         $info['map'] = $buffer->getString();
         $info['folder'] = $buffer->getString();
         $info['game'] = $buffer->getString();
-        
+
         $info['id'] = $buffer->getShort();
         $info['players'] = $buffer->getByte();
         $info['maxplayers'] = $buffer->getByte();
@@ -86,9 +92,9 @@ class SourceQuery {
         $info['vac'] = $buffer->getByte();
         $info['version'] = $buffer->getString();
         $info['edf'] = $buffer->getByte();
-        
+
         $edf = $info['edf'];
-        
+
         if ($edf & self::EDF_PORT) {
             $info['port'] = $buffer->getShort();
         }
@@ -106,7 +112,7 @@ class SourceQuery {
             $info['keywords'] = explode(',', $buffer->getString());
 
             if ($info['game'] === 'Rust') {
-                foreach($info['keywords'] as $keyword) {
+                foreach ($info['keywords'] as $keyword) {
                     if (substr($keyword, 0, 2) == 'mp') {
                         $info['maxplayers'] = intval(substr($keyword, 2));
                     } else if (substr($keyword, 0, 2) == 'cp') {

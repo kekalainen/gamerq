@@ -1,7 +1,9 @@
 <?php
+
 namespace Kekalainen\GameRQ;
 
-class SourceRcon {
+class SourceRcon
+{
     private $socket;
 
     const SERVERDATA_AUTH = 3;
@@ -9,7 +11,8 @@ class SourceRcon {
     const SERVERDATA_EXECCOMMAND = 2;
     const SERVERDATA_RESPONSE_VALUE = 0;
 
-    public function connect($address, $port, $password, $timeout = 1) {
+    public function connect($address, $port, $password, $timeout = 1)
+    {
         $socket = @fsockopen($address, $port, $errno, $errstr, $timeout);
         if ($socket) {
             stream_set_timeout($socket, $timeout);
@@ -20,11 +23,13 @@ class SourceRcon {
         }
     }
 
-    public function disconnect() {
+    public function disconnect()
+    {
         @fclose($this->socket);
     }
 
-    public function write($type, $body) {
+    public function write($type, $body)
+    {
         $size = 10 + strlen($body);
         $id = rand(1, 100);
         $binaryString = pack('VVVa*a', $size, $id, $type, "$body\x00", "\x00");
@@ -35,7 +40,8 @@ class SourceRcon {
         }
     }
 
-    public function read() {
+    public function read()
+    {
         $size = (new Buffer(fread($this->socket, 4)))->getLong();
         $data = fread($this->socket, $size);
         $buffer = new Buffer($data);
@@ -47,7 +53,8 @@ class SourceRcon {
         ];
     }
 
-    public function auth($password) {
+    public function auth($password)
+    {
         $this->write(self::SERVERDATA_AUTH, $password);
         $data = $this->read();
 
@@ -60,7 +67,8 @@ class SourceRcon {
         }
     }
 
-    function command($command) {
+    function command($command)
+    {
         $this->write(self::SERVERDATA_EXECCOMMAND, $command);
 
         $data = $this->read();
