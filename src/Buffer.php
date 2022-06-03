@@ -18,7 +18,7 @@ class Buffer
     }
 
     /**
-     * Gets a byte from the buffer
+     * Gets a byte from the buffer.
      */
     public function getByte(): int
     {
@@ -28,7 +28,7 @@ class Buffer
     }
 
     /**
-     * Gets a null-terminated string from the buffer
+     * Gets a null-terminated string from the buffer.
      * 
      * https://developer.valvesoftware.com/wiki/String
      */
@@ -41,7 +41,7 @@ class Buffer
     }
 
     /**
-     * Gets a 16-bit short integer from the buffer
+     * Gets a 16-bit short integer from the buffer.
      */
     public function getShort(): int
     {
@@ -51,7 +51,7 @@ class Buffer
     }
 
     /**
-     * Gets a 32-bit long integer from the buffer
+     * Gets a 32-bit long integer from the buffer.
      */
     public function getLong(): int
     {
@@ -61,7 +61,7 @@ class Buffer
     }
 
     /**
-     * Gets a 64-bit long long integer from the buffer
+     * Gets a 64-bit long long integer from the buffer.
      */
     public function getLongLong(): int
     {

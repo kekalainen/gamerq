@@ -59,7 +59,7 @@ class SourceQuery
     }
 
     /**
-     * Retrieves information about the server including, but not limited to: its name, the map currently being played, and the number of players
+     * Retrieves information about the server including, but not limited to: its name, the map currently being played, and the number of players.
      * 
      * https://developer.valvesoftware.com/wiki/Server_queries#A2S_INFO
      */
