@@ -67,6 +67,6 @@ class Buffer
     {
         $long = substr($this->data, 0, 8);
         $this->data = substr($this->data, 8);
-        return unpack($this->bigEndian ? 'J' : 'q', $long)[1];
+        return unpack($this->bigEndian ? 'J' : 'Q', $long)[1];
     }
 }
