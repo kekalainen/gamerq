@@ -55,8 +55,8 @@ class GameSpy4Query extends SourceQuery
             'motd' => $buffer->getString(),
             'gametype' => $buffer->getString(),
             'map' => $buffer->getString(),
-            'players' => $buffer->getString(),
-            'maxplayers' => $buffer->getString(),
+            'players' => (int) $buffer->getString(),
+            'maxplayers' => (int) $buffer->getString(),
             'hostport' => $buffer->getShort(),
             'hostip' => $buffer->getString()
         ];
