@@ -26,7 +26,7 @@ class SourceQuery
      */
     public function connect(string $address, int $port, int $timeout = 1): void
     {
-        $socket = @fsockopen("udp://" . $address, $port, $errorCode, $errorMessage, $timeout);
+        $socket = @fsockopen("udp://$address", $port, $errorCode, $errorMessage, $timeout);
         if ($socket) {
             stream_set_timeout($socket, $timeout);
             $this->socket = $socket;
