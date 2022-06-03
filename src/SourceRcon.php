@@ -78,7 +78,6 @@ class SourceRcon
         if ($data['size'] > 4040) {
             $this->write(self::SERVERDATA_RESPONSE_VALUE, null);
 
-            $count = 0;
             while (true) {
                 $data = $this->read();
                 if ($data['type'] == self::SERVERDATA_RESPONSE_VALUE && $data['body'] == '') {
