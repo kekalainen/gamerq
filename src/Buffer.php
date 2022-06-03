@@ -14,7 +14,7 @@ class Buffer
     /**
      * Gets a byte from the buffer
      */
-    public function getByte()
+    public function getByte(): int
     {
         $byte = substr($this->data, 0, 1);
         $this->data = substr($this->data, 1);
@@ -25,10 +25,8 @@ class Buffer
      * Gets a null-terminated string from the buffer
      * 
      * https://developer.valvesoftware.com/wiki/String
-     * 
-     * @return string
      */
-    public function getString()
+    public function getString(): string
     {
         $nullTerminatorPos = strpos($this->data, "\x00");
         $str = substr($this->data, 0, $nullTerminatorPos);
@@ -39,7 +37,7 @@ class Buffer
     /**
      * Gets a 16-bit short integer from the buffer
      */
-    public function getShort()
+    public function getShort(): int
     {
         $short = substr($this->data, 0, 2);
         $this->data = substr($this->data, 2);
@@ -49,7 +47,7 @@ class Buffer
     /**
      * Gets a 32-bit long integer from the buffer
      */
-    public function getLong()
+    public function getLong(): int
     {
         $long = substr($this->data, 0, 4);
         $this->data = substr($this->data, 4);
@@ -59,7 +57,7 @@ class Buffer
     /**
      * Gets a 64-bit long long integer from the buffer
      */
-    public function getLongLong()
+    public function getLongLong(): int
     {
         $long = substr($this->data, 0, 8);
         $this->data = substr($this->data, 8);

@@ -4,6 +4,7 @@ namespace Kekalainen\GameRQ;
 
 class SourceQuery
 {
+    /** @var resource|false|null */
     protected $socket;
 
     // Headers
@@ -18,7 +19,10 @@ class SourceQuery
     const EDF_KEYWORDS = 0x20;
     const EDF_GAMEID = 0x01;
 
-    public function connect($address, $port, $timeout = 1)
+    /**
+     * @throws \Exception if the connection fails.
+     */
+    public function connect(string $address, int $port, int $timeout = 1): void
     {
         $socket = @fsockopen("udp://" . $address, $port, $errno, $errstr, $timeout);
         if ($socket) {
@@ -29,19 +33,22 @@ class SourceQuery
         }
     }
 
-    public function disconnect()
+    public function disconnect(): void
     {
         @fclose($this->socket);
     }
 
-    public function write($header, $body, $challenge = null)
+    /**
+     * @return int|false
+     */
+    public function write(int $header, string $body, string $challenge = null)
     {
         $binaryString = pack('CCCCCa*', 0xFF, 0xFF, 0xFF, 0xFF, $header, "$body\x00"); // 5 bytes / unsigned chars, null-terminated string
         if ($challenge) $binaryString .= $challenge;
         return fwrite($this->socket, $binaryString, strlen($binaryString));
     }
 
-    public function read($length = 1400)
+    public function read(int $length = 1400): string
     {
         $binaryString = fread($this->socket, $length);
         if ($binaryString == null)
@@ -54,7 +61,7 @@ class SourceQuery
      * 
      * https://developer.valvesoftware.com/wiki/Server_queries#A2S_INFO
      */
-    public function info()
+    public function info(): array
     {
         $this->write(self::A2S_INFO, 'Source Engine Query');
         $buffer = new Buffer(substr($this->read(), 4));

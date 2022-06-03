@@ -4,7 +4,10 @@ namespace Kekalainen\GameRQ;
 
 class GameSpy4Query extends SourceQuery
 {
+    /** @var int */
     protected $sessionid;
+
+    /** @var string|null */
     protected $token;
 
     const CHALLENGE = 0x09;
@@ -15,22 +18,23 @@ class GameSpy4Query extends SourceQuery
         $this->sessionid = rand(1, 100);
     }
 
-    public function connect($address, $port, $timeout = 1)
+    public function connect(string $address, int $port, int $timeout = 1): void
     {
         parent::connect($address, $port, $timeout);
         $this->handshake();
     }
 
-    public function request($type)
+    /**
+     * @return int|false
+     */
+    public function request(int $type)
     {
         $binaryString = pack('cccN', 0xFE, 0xFD, $type, $this->sessionid);
-        if ($this->token != null) {
-            $binaryString .= $this->token;
-        }
+        if ($this->token) $binaryString .= $this->token;
         return fwrite($this->socket, $binaryString, strlen($binaryString));
     }
 
-    public function handshake()
+    public function handshake(): void
     {
         $this->request(self::CHALLENGE);
         $buffer = new Buffer($this->read(2056));
@@ -40,10 +44,11 @@ class GameSpy4Query extends SourceQuery
         $this->token = pack('N', $challengeToken);
     }
 
-    public function info()
+    public function info(): array
     {
         $this->request(self::INFORMATION);
         $buffer = new Buffer($this->read());
+
         return [
             'type' => $buffer->getByte(),
             'sessionid' => $buffer->getLong(),
