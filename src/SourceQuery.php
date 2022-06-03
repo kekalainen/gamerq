@@ -30,8 +30,9 @@ class SourceQuery {
         @fclose($this->socket);
     }
 
-    public function write($header, $body) {
+    public function write($header, $body, $challenge = null) {
         $binaryString = pack('CCCCCa*', 0xFF, 0xFF, 0xFF, 0xFF, $header, "$body\x00"); // 5 bytes / unsigned chars, null-terminated string
+        if ($challenge) $binaryString .= $challenge;
         return fwrite($this->socket, $binaryString, strlen($binaryString));
     }
 
@@ -59,7 +60,7 @@ class SourceQuery {
         {
             if ($info['header'] === self::S2C_CHALLENGE) {
                 $challenge = pack('l', $buffer->getLong());
-                $this->write(self::A2S_INFO, 'Source Engine Query' . "\x00" . $challenge);
+                $this->write(self::A2S_INFO, 'Source Engine Query', $challenge);
                 $buffer = new Buffer(substr($this->read(), 4));
                 $info['header'] = $buffer->getByte();
             }
