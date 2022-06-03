@@ -4,11 +4,17 @@ namespace Kekalainen\GameRQ;
 
 class Buffer
 {
-    private $data;
+    protected $data;
+    protected $bigEndian;
 
-    public function __construct($binaryString)
+    /**
+     * @param string $binaryString
+     * @param bool $bigEndian True for big endian byte order, false for machine byte order.
+     */
+    public function __construct(string $binaryString, bool $bigEndian = false)
     {
         $this->data = $binaryString;
+        $this->bigEndian = $bigEndian;
     }
 
     /**
@@ -41,7 +47,7 @@ class Buffer
     {
         $short = substr($this->data, 0, 2);
         $this->data = substr($this->data, 2);
-        return unpack('s', $short)[1];
+        return unpack($this->bigEndian ? 'n' : 's', $short)[1];
     }
 
     /**
@@ -51,7 +57,7 @@ class Buffer
     {
         $long = substr($this->data, 0, 4);
         $this->data = substr($this->data, 4);
-        return unpack('l', $long)[1];
+        return unpack($this->bigEndian ? 'N' : 'l', $long)[1];
     }
 
     /**
@@ -61,6 +67,6 @@ class Buffer
     {
         $long = substr($this->data, 0, 8);
         $this->data = substr($this->data, 8);
-        return unpack('q', $long)[1];
+        return unpack($this->bigEndian ? 'J' : 'q', $long)[1];
     }
 }

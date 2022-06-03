@@ -37,7 +37,7 @@ class GameSpy4Query extends SourceQuery
     public function handshake(): void
     {
         $this->request(self::CHALLENGE);
-        $buffer = new Buffer($this->read(2056));
+        $buffer = new Buffer($this->read(2056), true);
         $type = $buffer->getByte();
         $sessionid = $buffer->getLong();
         $challengeToken = $buffer->getString();
@@ -47,7 +47,7 @@ class GameSpy4Query extends SourceQuery
     public function info(): array
     {
         $this->request(self::INFORMATION);
-        $buffer = new Buffer($this->read());
+        $buffer = new Buffer($this->read(), true);
 
         return [
             'type' => $buffer->getByte(),
