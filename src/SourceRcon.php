@@ -2,6 +2,8 @@
 
 namespace Kekalainen\GameRQ;
 
+use Kekalainen\GameRQ\Exceptions\ConnectionException;
+
 class SourceRcon
 {
     private $socket;
@@ -12,17 +14,17 @@ class SourceRcon
     const SERVERDATA_RESPONSE_VALUE = 0;
 
     /**
-     * @throws \Exception if the connection fails.
+     * @throws ConnectionException if the connection fails.
      */
     public function connect(string $address, int $port, string $password, int $timeout = 1): void
     {
-        $socket = @fsockopen($address, $port, $errno, $errstr, $timeout);
+        $socket = @fsockopen($address, $port, $errorCode, $errorMessage, $timeout);
         if ($socket) {
             stream_set_timeout($socket, $timeout);
             $this->socket = $socket;
             $this->auth($password);
         } else {
-            throw new \Exception('Connection failed: ' . $errstr);
+            throw new ConnectionException($errorMessage, $errorCode);
         }
     }
 

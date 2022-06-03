@@ -2,6 +2,8 @@
 
 namespace Kekalainen\GameRQ;
 
+use Kekalainen\GameRQ\Exceptions\ConnectionException;
+
 class SourceQuery
 {
     /** @var resource|false|null */
@@ -20,16 +22,16 @@ class SourceQuery
     const EDF_GAMEID = 0x01;
 
     /**
-     * @throws \Exception if the connection fails.
+     * @throws ConnectionException if the connection fails.
      */
     public function connect(string $address, int $port, int $timeout = 1): void
     {
-        $socket = @fsockopen("udp://" . $address, $port, $errno, $errstr, $timeout);
+        $socket = @fsockopen("udp://" . $address, $port, $errorCode, $errorMessage, $timeout);
         if ($socket) {
             stream_set_timeout($socket, $timeout);
             $this->socket = $socket;
         } else {
-            throw new \Exception($errstr);
+            throw new ConnectionException($errorMessage, $errorCode);
         }
     }
 

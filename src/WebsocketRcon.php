@@ -2,12 +2,14 @@
 
 namespace Kekalainen\GameRQ;
 
-use \WSSC\WebSocketClient;
-use \WSSC\Components\ClientConfig;
-use \WSSC\Exceptions\ConnectionException;
+use Kekalainen\GameRQ\Exceptions\ConnectionException;
+use WSSC\Components\ClientConfig;
+use WSSC\Exceptions\ConnectionException as WSSCConnectionException;
+use WSSC\WebSocketClient;
 
 class WebsocketRcon
 {
+    /** @var WebSocketClient|null */
     private $client;
 
     /**
@@ -15,9 +17,13 @@ class WebsocketRcon
      */
     public function connect(string $address, int $port, string $password, int $timeout = 1): void
     {
-        $config = new ClientConfig();
-        $config->setTimeout($timeout);
-        $this->client = new WebSocketClient("ws://{$address}:{$port}/{$password}", $config);
+        try {
+            $config = new ClientConfig();
+            $config->setTimeout($timeout);
+            $this->client = new WebSocketClient("ws://{$address}:{$port}/{$password}", $config);
+        } catch (WSSCConnectionException $exception) {
+            throw new ConnectionException($exception->getMessage(), $exception->getCode());
+        }
     }
 
     public function disconnect(): void
@@ -26,7 +32,7 @@ class WebsocketRcon
             if ($this->client) {
                 $this->client->close();
             }
-        } catch (ConnectionException $e) {
+        } catch (WSSCConnectionException $exception) {
         }
     }
 
@@ -46,7 +52,7 @@ class WebsocketRcon
                 if ($response->Identifier == $identifier)
                     return $response->Message;
             }
-        } catch (ConnectionException $e) {
+        } catch (WSSCConnectionException $exception) {
         }
 
         return '';
