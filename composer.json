@@ -15,7 +15,9 @@
         }
     },
     "require": {
-        "php": ">=7.1",
-        "arthurkushman/php-wss": "^1.6"
+        "php": ">=7.1"
+    },
+    "suggest": {
+        "arthurkushman/php-wss": "Required for WebSocket RCON (^1.6)"
     }
 }
