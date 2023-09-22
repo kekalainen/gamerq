@@ -2,13 +2,8 @@
 
 namespace Kekalainen\GameRQ;
 
-use Kekalainen\GameRQ\Exceptions\ConnectionException;
-
-class SourceQuery implements QueryInterface
+class SourceQuery extends SocketQuery
 {
-    /** @var resource|false|null */
-    protected $socket;
-
     // Headers
     const A2S_INFO = 0x54;
     const S2A_INFO_SRC = 0x49;
@@ -23,18 +18,7 @@ class SourceQuery implements QueryInterface
 
     public function connect(string $address, int $port, int $timeout = 1): void
     {
-        $socket = @fsockopen("udp://$address", $port, $errorCode, $errorMessage, $timeout);
-        if ($socket) {
-            stream_set_timeout($socket, $timeout);
-            $this->socket = $socket;
-        } else {
-            throw new ConnectionException($errorMessage, $errorCode);
-        }
-    }
-
-    public function disconnect(): void
-    {
-        @fclose($this->socket);
+        parent::connect("udp://$address", $port, $timeout);
     }
 
     /**
@@ -45,14 +29,6 @@ class SourceQuery implements QueryInterface
         $binaryString = pack('CCCCCa*', 0xFF, 0xFF, 0xFF, 0xFF, $header, "$body\x00"); // 5 bytes / unsigned chars, null-terminated string
         if ($challenge) $binaryString .= $challenge;
         return fwrite($this->socket, $binaryString, strlen($binaryString));
-    }
-
-    public function read(int $length = 1400): string
-    {
-        $binaryString = fread($this->socket, $length);
-        if ($binaryString == null)
-            throw new \Exception('Empty read');
-        return $binaryString;
     }
 
     /**

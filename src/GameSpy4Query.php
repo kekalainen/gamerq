@@ -2,7 +2,7 @@
 
 namespace Kekalainen\GameRQ;
 
-class GameSpy4Query extends SourceQuery
+class GameSpy4Query extends SocketQuery
 {
     /** @var int */
     protected $sessionid;
@@ -20,7 +20,7 @@ class GameSpy4Query extends SourceQuery
 
     public function connect(string $address, int $port, int $timeout = 1): void
     {
-        parent::connect($address, $port, $timeout);
+        parent::connect("udp://$address", $port, $timeout);
         $this->handshake();
     }
 
