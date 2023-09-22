@@ -2,9 +2,38 @@
 
 namespace Kekalainen\GameRQ;
 
+use OutOfBoundsException;
+
 class Buffer
 {
+    protected const NULL_TERMINATOR = "\x00";
+
+    /**
+     * The buffered data.
+     *
+     * @var string
+     */
     protected $data;
+
+    /**
+     * The length of the buffered data.
+     *
+     * @var int
+     */
+    protected $length;
+
+    /**
+     * The current offset into the buffered data.
+     *
+     * @var int
+     */
+    protected $offset;
+
+    /**
+     * Whether the byte order of the buffered data is big-endian.
+     *
+     * @var bool
+     */
     protected $bigEndian;
 
     /**
@@ -13,7 +42,9 @@ class Buffer
      */
     public function __construct(string $binaryString, bool $bigEndian = false)
     {
+        $this->offset = 0;
         $this->data = $binaryString;
+        $this->length = strlen($this->data);
         $this->bigEndian = $bigEndian;
     }
 
@@ -22,9 +53,9 @@ class Buffer
      */
     public function getByte(): int
     {
-        $byte = substr($this->data, 0, 1);
-        $this->data = substr($this->data, 1);
-        return ord($byte);
+        $char = $this->getChars(1);
+
+        return ord($char);
     }
 
     /**
@@ -34,10 +65,10 @@ class Buffer
      */
     public function getString(): string
     {
-        $nullTerminatorPos = strpos($this->data, "\x00");
-        $str = substr($this->data, 0, $nullTerminatorPos);
-        $this->data = substr($this->data, $nullTerminatorPos + 1);
-        return $str;
+        $nullTerminatorPos = strpos($this->data, static::NULL_TERMINATOR, $this->offset);
+        $chars = $this->getChars($nullTerminatorPos + 1 - $this->offset);
+
+        return rtrim($chars, static::NULL_TERMINATOR);
     }
 
     /**
@@ -45,9 +76,7 @@ class Buffer
      */
     public function getShort(): int
     {
-        $short = substr($this->data, 0, 2);
-        $this->data = substr($this->data, 2);
-        return unpack($this->bigEndian ? 'n' : 's', $short)[1];
+        return $this->getUnpacked(2, 'n', 's');
     }
 
     /**
@@ -55,9 +84,7 @@ class Buffer
      */
     public function getLong(): int
     {
-        $long = substr($this->data, 0, 4);
-        $this->data = substr($this->data, 4);
-        return unpack($this->bigEndian ? 'N' : 'l', $long)[1];
+        return $this->getUnpacked(4, 'N', 'l');
     }
 
     /**
@@ -65,8 +92,38 @@ class Buffer
      */
     public function getLongLong(): int
     {
-        $long = substr($this->data, 0, 8);
-        $this->data = substr($this->data, 8);
-        return unpack($this->bigEndian ? 'J' : 'Q', $long)[1];
+        return $this->getUnpacked(8, 'J', 'Q');
+    }
+
+    /**
+     * Gets a sequence of characters from the buffer.
+     */
+    protected function getChars(int $length): string
+    {
+        $end = $this->offset + $length;
+
+        if ($end < 0 || $this->length < $end)
+            throw new OutOfBoundsException('Buffer index out of bounds.');
+
+        $chars = substr($this->data, $this->offset, $length);
+        $this->offset = $end;
+
+        return $chars;
+    }
+
+    /**
+     * Gets and unpacks chars from the buffer.
+     *
+     * @return mixed the (first) unpacked element.
+     */
+    protected function getUnpacked(int $length, string $formatBigEndian, string $formatLittleEndian)
+    {
+        $chars = $this->getChars($length);
+
+        $format = $this->bigEndian ?
+            $formatBigEndian :
+            $formatLittleEndian;
+
+        return unpack($format, $chars)[1];
     }
 }
