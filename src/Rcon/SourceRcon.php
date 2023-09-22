@@ -2,6 +2,7 @@
 
 namespace Kekalainen\GameRQ\Rcon;
 
+use Exception;
 use Kekalainen\GameRQ\Buffer;
 use Kekalainen\GameRQ\Exceptions\ConnectionException;
 
@@ -17,6 +18,7 @@ class SourceRcon implements RconInterface
     public function connect(string $address, int $port, string $password, int $timeout = 1): void
     {
         $socket = @fsockopen($address, $port, $errorCode, $errorMessage, $timeout);
+
         if ($socket) {
             stream_set_timeout($socket, $timeout);
             $this->socket = $socket;
@@ -41,18 +43,21 @@ class SourceRcon implements RconInterface
         if ($body) $size += strlen($body);
         $id = rand(1, 100);
         $binaryString = pack('VVVa*a', $size, $id, $type, "$body\x00", "\x00");
+
         try {
             return fwrite($this->socket, $binaryString, strlen($binaryString));
-        } catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
+        } catch (Exception $exception) {
+            throw new Exception($exception->getMessage());
         }
     }
 
     public function read(): array
     {
         $size = (new Buffer(fread($this->socket, 4)))->getLong();
+
         $data = fread($this->socket, $size);
         $buffer = new Buffer($data);
+
         return [
             'size' => $size,
             'id' => $buffer->getLong(),
@@ -66,13 +71,11 @@ class SourceRcon implements RconInterface
         $this->write(self::SERVERDATA_AUTH, $password);
         $data = $this->read();
 
-        if ($data['type'] == self::SERVERDATA_RESPONSE_VALUE) {
+        if ($data['type'] == self::SERVERDATA_RESPONSE_VALUE)
             $data = $this->read();
-        }
 
-        if ($data['id'] == -1 || $data['type'] != self::SERVERDATA_AUTH_RESPONSE) {
-            throw new \Exception('Unauthenticated');
-        }
+        if ($data['id'] == -1 || $data['type'] != self::SERVERDATA_AUTH_RESPONSE)
+            throw new Exception('Unauthenticated.');
     }
 
     function command(string $command): string
@@ -88,10 +91,12 @@ class SourceRcon implements RconInterface
 
             while (true) {
                 $data = $this->read();
+
                 if ($data['type'] == self::SERVERDATA_RESPONSE_VALUE && $data['body'] == '') {
                     $this->read();
                     break;
                 }
+
                 $body .= $data['body'];
             }
         }

@@ -83,13 +83,11 @@ class SourceQuery extends SocketQuery
 
         $edf = $info['edf'];
 
-        if ($edf & self::EDF_PORT) {
+        if ($edf & self::EDF_PORT)
             $info['port'] = $buffer->getShort();
-        }
 
-        if ($edf & self::EDF_STEAMID) {
+        if ($edf & self::EDF_STEAMID)
             $info['steamid'] = $buffer->getLongLong();
-        }
 
         if ($edf & self::EDF_SOURCETV) {
             $info['sourcetv_port'] = $buffer->getShort();
@@ -110,9 +108,8 @@ class SourceQuery extends SocketQuery
             }
         }
 
-        if ($edf & self::EDF_GAMEID) {
+        if ($edf & self::EDF_GAMEID)
             $info['gameid'] = $buffer->getLongLong();
-        }
 
         return $info;
     }

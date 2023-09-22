@@ -17,6 +17,7 @@ class WebSocketRcon implements RconInterface
         try {
             $config = new ClientConfig();
             $config->setTimeout($timeout);
+
             $this->client = new WebSocketClient("ws://{$address}:{$port}/{$password}", $config);
         } catch (WSSCConnectionException $exception) {
             throw new ConnectionException($exception->getMessage(), $exception->getCode());
@@ -26,9 +27,8 @@ class WebSocketRcon implements RconInterface
     public function disconnect(): void
     {
         try {
-            if ($this->client) {
+            if ($this->client)
                 $this->client->close();
-            }
         } catch (WSSCConnectionException $exception) {
         }
     }
@@ -46,6 +46,7 @@ class WebSocketRcon implements RconInterface
         try {
             while (true) {
                 $response = json_decode($this->client->receive());
+
                 if ($response->Identifier == $identifier)
                     return $response->Message;
             }
