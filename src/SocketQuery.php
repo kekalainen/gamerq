@@ -25,7 +25,8 @@ abstract class SocketQuery implements QueryInterface
 
     public function disconnect(): void
     {
-        @fclose($this->socket);
+        if (is_resource($this->socket))
+            @fclose($this->socket);
     }
 
     public function read(int $length = 1400): string
