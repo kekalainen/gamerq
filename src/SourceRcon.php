@@ -27,7 +27,8 @@ class SourceRcon implements RconInterface
 
     public function disconnect(): void
     {
-        @fclose($this->socket);
+        if (is_resource($this->socket))
+            @fclose($this->socket);
     }
 
     /**
