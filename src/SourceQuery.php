@@ -4,7 +4,7 @@ namespace Kekalainen\GameRQ;
 
 use Kekalainen\GameRQ\Exceptions\ConnectionException;
 
-class SourceQuery
+class SourceQuery implements QueryInterface
 {
     /** @var resource|false|null */
     protected $socket;
@@ -21,9 +21,6 @@ class SourceQuery
     const EDF_KEYWORDS = 0x20;
     const EDF_GAMEID = 0x01;
 
-    /**
-     * @throws ConnectionException if the connection fails.
-     */
     public function connect(string $address, int $port, int $timeout = 1): void
     {
         $socket = @fsockopen("udp://$address", $port, $errorCode, $errorMessage, $timeout);
