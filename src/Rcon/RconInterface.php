@@ -1,6 +1,6 @@
 <?php
 
-namespace Kekalainen\GameRQ;
+namespace Kekalainen\GameRQ\Rcon;
 
 use Kekalainen\GameRQ\Exceptions\ConnectionException;
 

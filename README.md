@@ -14,8 +14,8 @@ This library should support all games that implement the [Source query](https://
 
 ## RCON
 ```php
-$rcon = new \Kekalainen\GameRQ\SourceRcon; // Source games
-$rcon = new \Kekalainen\GameRQ\WebsocketRcon; // Rust
+$rcon = new \Kekalainen\GameRQ\Rcon\SourceRcon; // Source games
+$rcon = new \Kekalainen\GameRQ\Rcon\WebsocketRcon; // Rust
 
 try {
     $rcon->connect($address, $port, $password);
@@ -30,8 +30,8 @@ try {
 
 ## Query
 ```php
-$query = new \Kekalainen\GameRQ\SourceQuery; // Source games
-$query = new \Kekalainen\GameRQ\GameSpy4Query; // Minecraft
+$query = new \Kekalainen\GameRQ\Query\SourceQuery; // Source games
+$query = new \Kekalainen\GameRQ\Query\GameSpy4Query; // Minecraft
 
 try {
     $query->connect($address, $port);

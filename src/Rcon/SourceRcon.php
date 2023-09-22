@@ -1,7 +1,8 @@
 <?php
 
-namespace Kekalainen\GameRQ;
+namespace Kekalainen\GameRQ\Rcon;
 
+use Kekalainen\GameRQ\Buffer;
 use Kekalainen\GameRQ\Exceptions\ConnectionException;
 
 class SourceRcon implements RconInterface

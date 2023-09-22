@@ -1,8 +1,9 @@
 <?php
 
-namespace Kekalainen\GameRQ;
+namespace Kekalainen\GameRQ\Query;
 
 use Exception;
+use Kekalainen\GameRQ\Buffer;
 
 class SourceQuery extends SocketQuery
 {

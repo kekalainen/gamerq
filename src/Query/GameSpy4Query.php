@@ -1,7 +1,8 @@
 <?php
 
-namespace Kekalainen\GameRQ;
+namespace Kekalainen\GameRQ\Query;
 
+use Kekalainen\GameRQ\Buffer;
 use Kekalainen\GameRQ\Exceptions\ConnectionException;
 
 class GameSpy4Query extends SocketQuery
