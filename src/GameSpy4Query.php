@@ -2,6 +2,8 @@
 
 namespace Kekalainen\GameRQ;
 
+use Kekalainen\GameRQ\Exceptions\ConnectionException;
+
 class GameSpy4Query extends SocketQuery
 {
     /** @var int */
@@ -21,7 +23,10 @@ class GameSpy4Query extends SocketQuery
     public function connect(string $address, int $port, int $timeout = 1): void
     {
         parent::connect("udp://$address", $port, $timeout);
-        $this->handshake();
+
+        ConnectionException::wrap(function () {
+            $this->handshake();
+        });
     }
 
     /**
