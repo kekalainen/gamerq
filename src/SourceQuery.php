@@ -2,6 +2,8 @@
 
 namespace Kekalainen\GameRQ;
 
+use Exception;
+
 class SourceQuery extends SocketQuery
 {
     // Headers
@@ -54,7 +56,7 @@ class SourceQuery extends SocketQuery
             }
 
             if ($info['header'] !== self::S2A_INFO_SRC)
-                throw new \Exception('Unrecognized response header');
+                throw new Exception('Unrecognized response header.');
         }
 
         $info['protocol'] = $buffer->getByte();
