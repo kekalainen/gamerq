@@ -31,7 +31,8 @@ try {
 ## Query
 ```php
 $query = new \Kekalainen\GameRQ\Query\SourceQuery; // Source games
-$query = new \Kekalainen\GameRQ\Query\GameSpy4Query; // Minecraft
+$query = new \Kekalainen\GameRQ\Query\MinecraftQuery; // Minecraft (TCP)
+$query = new \Kekalainen\GameRQ\Query\GameSpy4Query; // Minecraft (UDP)
 
 try {
     $query->connect($address, $port);
