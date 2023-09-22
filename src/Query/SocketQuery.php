@@ -15,12 +15,11 @@ abstract class SocketQuery implements QueryInterface
     {
         $socket = @fsockopen($address, $port, $errorCode, $errorMessage, $timeout);
 
-        if ($socket) {
-            stream_set_timeout($socket, $timeout);
-            $this->socket = $socket;
-        } else {
+        if ($socket === false)
             throw new ConnectionException($errorMessage, $errorCode);
-        }
+
+        stream_set_timeout($socket, $timeout);
+        $this->socket = $socket;
     }
 
     public function disconnect(): void

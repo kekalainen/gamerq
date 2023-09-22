@@ -19,13 +19,13 @@ class SourceRcon implements RconInterface
     {
         $socket = @fsockopen($address, $port, $errorCode, $errorMessage, $timeout);
 
-        if ($socket) {
-            stream_set_timeout($socket, $timeout);
-            $this->socket = $socket;
-            $this->auth($password);
-        } else {
+        if ($socket === false)
             throw new ConnectionException($errorMessage, $errorCode);
-        }
+
+        stream_set_timeout($socket, $timeout);
+        $this->socket = $socket;
+
+        $this->auth($password);
     }
 
     public function disconnect(): void
