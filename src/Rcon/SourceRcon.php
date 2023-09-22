@@ -2,7 +2,6 @@
 
 namespace Kekalainen\GameRQ\Rcon;
 
-use Exception;
 use Kekalainen\GameRQ\Buffer;
 use Kekalainen\GameRQ\Exceptions\ConnectionException;
 
@@ -71,7 +70,7 @@ class SourceRcon implements RconInterface
             $data = $this->read();
 
         if ($data['id'] == -1 || $data['type'] != self::SERVERDATA_AUTH_RESPONSE)
-            throw new Exception('Unauthenticated.');
+            throw new ConnectionException('Unauthenticated.');
     }
 
     function command(string $command): string
