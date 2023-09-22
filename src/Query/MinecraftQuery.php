@@ -127,10 +127,12 @@ class MinecraftQuery extends SocketQuery
 
     /**
      * Parses the given message object into a string.
+     *
+     * @param object $message
      */
-    protected function parseMessage(object $message): string
+    protected function parseMessage($message): string
     {
-        $extras = array_map(static function (object $element) {
+        $extras = array_map(static function ($element) {
             return $element->text;
         }, $message->extra ?? []);
 
