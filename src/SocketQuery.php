@@ -34,7 +34,7 @@ abstract class SocketQuery implements QueryInterface
         $binaryString = fread($this->socket, $length);
 
         if ($binaryString === false)
-            throw new ConnectionException('Failed to read from socket.', null);
+            throw new ConnectionException('Failed to read from socket.');
 
         return $binaryString;
     }

@@ -2,14 +2,16 @@
 
 namespace Kekalainen\GameRQ\Exceptions;
 
+use Throwable;
+
 class ConnectionException extends Exception
 {
-    public function __construct($message, $code, ...$params)
+    public function __construct(string $reason = '', int $code = 0, ?Throwable $previous = null)
     {
-        $newMessage = 'Connection failed.';
-        if (!empty($code)) $newMessage .= " Code: $code.";
-        if (!empty($message)) $newMessage .= " Message: \"$message\".";
+        $message = 'Connection failed.';
 
-        parent::__construct($newMessage, ...$params);
+        if (!empty($reason)) $message .= " Reason: \"$reason\".";
+
+        parent::__construct($message, $code, $previous);
     }
 }
