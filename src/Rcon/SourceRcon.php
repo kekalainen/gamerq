@@ -44,11 +44,7 @@ class SourceRcon implements RconInterface
         $id = rand(1, 100);
         $binaryString = pack('VVVa*a', $size, $id, $type, "$body\x00", "\x00");
 
-        try {
-            return fwrite($this->socket, $binaryString, strlen($binaryString));
-        } catch (Exception $exception) {
-            throw new Exception($exception->getMessage());
-        }
+        return fwrite($this->socket, $binaryString, strlen($binaryString));
     }
 
     public function read(): array
