@@ -7,14 +7,11 @@ use WSSC\Components\ClientConfig;
 use WSSC\Exceptions\ConnectionException as WSSCConnectionException;
 use WSSC\WebSocketClient;
 
-class WebsocketRcon
+class WebsocketRcon implements RconInterface
 {
     /** @var WebSocketClient|null */
     private $client;
 
-    /**
-     * @throws ConnectionException if the connection fails.
-     */
     public function connect(string $address, int $port, string $password, int $timeout = 1): void
     {
         try {

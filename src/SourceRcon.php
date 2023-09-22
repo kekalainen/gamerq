@@ -4,7 +4,7 @@ namespace Kekalainen\GameRQ;
 
 use Kekalainen\GameRQ\Exceptions\ConnectionException;
 
-class SourceRcon
+class SourceRcon implements RconInterface
 {
     private $socket;
 
@@ -13,9 +13,6 @@ class SourceRcon
     const SERVERDATA_EXECCOMMAND = 2;
     const SERVERDATA_RESPONSE_VALUE = 0;
 
-    /**
-     * @throws ConnectionException if the connection fails.
-     */
     public function connect(string $address, int $port, string $password, int $timeout = 1): void
     {
         $socket = @fsockopen($address, $port, $errorCode, $errorMessage, $timeout);
