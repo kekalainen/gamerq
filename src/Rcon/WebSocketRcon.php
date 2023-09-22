@@ -7,7 +7,7 @@ use WSSC\Components\ClientConfig;
 use WSSC\Exceptions\ConnectionException as WSSCConnectionException;
 use WSSC\WebSocketClient;
 
-class WebsocketRcon implements RconInterface
+class WebSocketRcon implements RconInterface
 {
     /** @var WebSocketClient|null */
     private $client;

@@ -18,7 +18,7 @@ This library should support all games that implement the [Source query](https://
 
 ```php
 $rcon = new \Kekalainen\GameRQ\Rcon\SourceRcon; // Source games & Minecraft
-$rcon = new \Kekalainen\GameRQ\Rcon\WebsocketRcon; // Rust
+$rcon = new \Kekalainen\GameRQ\Rcon\WebSocketRcon; // Rust
 
 try {
     $rcon->connect($address, $port, $password);
