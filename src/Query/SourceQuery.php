@@ -29,8 +29,11 @@ class SourceQuery extends SocketQuery
      */
     public function write(int $header, string $body, string $challenge = null)
     {
-        $binaryString = pack('CCCCCa*', 0xFF, 0xFF, 0xFF, 0xFF, $header, "$body\x00"); // 5 bytes / unsigned chars, null-terminated string
+        // Request format: 5 bytes (unsigned chars) followed by a null-terminated string.
+        $binaryString = pack('CCCCCa*', 0xFF, 0xFF, 0xFF, 0xFF, $header, "$body\x00");
+
         if ($challenge) $binaryString .= $challenge;
+
         return fwrite($this->socket, $binaryString, strlen($binaryString));
     }
 
